@@ -1,0 +1,298 @@
+{
+  "info": {
+    "name": "ИПП ПР5 — телефонная книга (MEAN)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Запросы к REST API телефонной книги. Адрес сервера в переменной коллекции baseUrl: локально http://localhost:8080, в облаке — адрес сервиса на Render."
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "contactId",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "01 Все контакты (пустая база)",
+      "request": {
+        "method": "GET",
+        "description": "При пустой базе вернётся []",
+        "url": {
+          "raw": "{{baseUrl}}/api/contacts",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "contacts"
+          ]
+        }
+      }
+    },
+    {
+      "name": "02 POST: Иван Петров",
+      "request": {
+        "method": "POST",
+        "description": "",
+        "url": {
+          "raw": "{{baseUrl}}/api/contacts",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "contacts"
+          ]
+        },
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Иван Петров\",\n  \"email\": \"ivan.petrov@mail.ru\",\n  \"phone\": {\n    \"mobile\": \"+7 900 123-45-67\",\n    \"work\": \"+7 495 111-22-33\"\n  }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "03 POST: Анна Смирнова",
+      "request": {
+        "method": "POST",
+        "description": "",
+        "url": {
+          "raw": "{{baseUrl}}/api/contacts",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "contacts"
+          ]
+        },
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Анна Смирнова\",\n  \"email\": \"anna.smirnova@yandex.ru\",\n  \"phone\": {\n    \"mobile\": \"+7 916 555-01-02\",\n    \"work\": \"\"\n  }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "04 POST: Сергей Кузнецов (запоминаем id)",
+      "request": {
+        "method": "POST",
+        "description": "Скрипт во вкладке Scripts сохраняет _id в переменную {{contactId}} — дальше запросы используют её",
+        "url": {
+          "raw": "{{baseUrl}}/api/contacts",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "contacts"
+          ]
+        },
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Сергей Кузнецов\",\n  \"email\": \"s.kuznetsov@example.com\",\n  \"phone\": {\n    \"mobile\": \"+7 925 700-80-90\",\n    \"work\": \"+7 495 222-33-44\"\n  }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// сохраняем _id созданного контакта в переменную коллекции contactId",
+              "if (pm.response.code === 201) pm.collectionVariables.set('contactId', pm.response.json()._id);",
+              "pm.test('Код 201 Created', () => pm.response.to.have.status(201));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "05 Все контакты",
+      "request": {
+        "method": "GET",
+        "description": "Список по алфавиту",
+        "url": {
+          "raw": "{{baseUrl}}/api/contacts",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "contacts"
+          ]
+        }
+      }
+    },
+    {
+      "name": "06 GET по id",
+      "request": {
+        "method": "GET",
+        "description": "",
+        "url": {
+          "raw": "{{baseUrl}}/api/contacts/{{contactId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "contacts",
+            "{{contactId}}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "07 PUT: обновить",
+      "request": {
+        "method": "PUT",
+        "description": "Появится поле updatedAt",
+        "url": {
+          "raw": "{{baseUrl}}/api/contacts/{{contactId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "contacts",
+            "{{contactId}}"
+          ]
+        },
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Сергей Кузнецов\",\n  \"email\": \"kuznetsov@mirea.ru\",\n  \"phone\": {\n    \"mobile\": \"+7 925 700-80-90\",\n    \"work\": \"+7 495 222-33-44\"\n  }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "08 DELETE по id",
+      "request": {
+        "method": "DELETE",
+        "description": "Ответ 200 и _id удалённого",
+        "url": {
+          "raw": "{{baseUrl}}/api/contacts/{{contactId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "contacts",
+            "{{contactId}}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "09 GET удалённого → 404",
+      "request": {
+        "method": "GET",
+        "description": "",
+        "url": {
+          "raw": "{{baseUrl}}/api/contacts/{{contactId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "contacts",
+            "{{contactId}}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "10 Ошибка: контакт без имени → 400",
+      "request": {
+        "method": "POST",
+        "description": "",
+        "url": {
+          "raw": "{{baseUrl}}/api/contacts",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "contacts"
+          ]
+        },
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"noname@mail.ru\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "11 Ошибка: неверный id → 400",
+      "request": {
+        "method": "GET",
+        "description": "",
+        "url": {
+          "raw": "{{baseUrl}}/api/contacts/12345",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "contacts",
+            "12345"
+          ]
+        }
+      }
+    }
+  ]
+}

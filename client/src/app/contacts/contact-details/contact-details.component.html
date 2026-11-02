@@ -1,0 +1,28 @@
+@if (contact) {
+  <h3>{{ contact._id ? 'Детали контакта' : 'Новый контакт' }}</h3>
+  <form>
+    <div class="mb-3">
+      <label class="form-label" for="name">Имя</label>
+      <input class="form-control" id="name" name="name" [(ngModel)]="contact.name" placeholder="Иван Иванов">
+    </div>
+    <div class="mb-3">
+      <label class="form-label" for="email">Электронная почта</label>
+      <input class="form-control" id="email" name="email" [(ngModel)]="contact.email" placeholder="ivan@mail.ru">
+    </div>
+    <div class="mb-3">
+      <label class="form-label" for="mobile">Мобильный телефон</label>
+      <input class="form-control" id="mobile" name="mobile" [(ngModel)]="contact.phone.mobile" placeholder="+7 900 000-00-00">
+    </div>
+    <div class="mb-3">
+      <label class="form-label" for="work">Рабочий телефон</label>
+      <input class="form-control" id="work" name="work" [(ngModel)]="contact.phone.work" placeholder="+7 495 000-00-00">
+    </div>
+    @if (message) { <div class="alert alert-danger py-2">{{ message }}</div> }
+    @if (!contact._id) {
+      <button type="button" class="btn btn-primary" (click)="createContact(contact)">Создать контакт</button>
+    } @else {
+      <button type="button" class="btn btn-info me-2" (click)="updateContact(contact)">Обновить контакт</button>
+      <button type="button" class="btn btn-danger" (click)="deleteContact(contact._id)">Удалить контакт</button>
+    }
+  </form>
+}

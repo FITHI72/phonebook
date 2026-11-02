@@ -1,0 +1,27 @@
+<div class="row">
+  <div class="col-md-5">
+    <h2>Контакты</h2>
+    @if (error) { <div class="alert alert-danger">{{ error }}</div> }
+    <ul class="list-group mb-3">
+      @for (contact of contacts; track contact._id) {
+        <li class="list-group-item list-group-item-action"
+            [class.active]="contact === selectedContact"
+            (click)="selectContact(contact)">
+          {{ contact.name }}
+          <small class="d-block" [class.text-muted]="contact !== selectedContact">{{ contact.phone.mobile }}</small>
+        </li>
+      } @empty {
+        <li class="list-group-item text-muted">Список пуст</li>
+      }
+    </ul>
+    <button class="btn btn-warning" (click)="createNewContact()">Новый контакт</button>
+  </div>
+  <div class="col-md-6 offset-md-1">
+    <contact-details
+      [contact]="selectedContact"
+      [createHandler]="addContact"
+      [updateHandler]="updateContact"
+      [deleteHandler]="deleteContact">
+    </contact-details>
+  </div>
+</div>
